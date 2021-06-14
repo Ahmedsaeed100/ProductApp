@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AssignmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Assignment.dbo.Product' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Vendor_UID" />
+    </Key>
+    <Property Name="ID" Type="nvarchar" MaxLength="50" />
+    <Property Name="Title" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="250" />
+    <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Image" Type="nvarchar" MaxLength="150" />
+    <Property Name="views" Type="int" />
+    <Property Name="impressions" Type="int" />
+    <Property Name="Vendor_UID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="Vendor_UID" />
+    </Key>
+    <Property Name="Vendor_UID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Vendor_Name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Product_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Vendor_UID" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="Vendor_UID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Vendor_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
+    <End Role="Vendor1" Type="Self.Vendor" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Vendor_UID" />
+      </Principal>
+      <Dependent Role="Vendor1">
+        <PropertyRef Name="Vendor_UID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AssignmentModelStoreContainer">
+    <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Product" EntityType="Self.Product" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Product].[ID] AS [ID], 
+    [Product].[Title] AS [Title], 
+    [Product].[Description] AS [Description], 
+    [Product].[Price] AS [Price], 
+    [Product].[Image] AS [Image], 
+    [Product].[views] AS [views], 
+    [Product].[impressions] AS [impressions], 
+    [Product].[Vendor_UID] AS [Vendor_UID]
+    FROM [dbo].[Product] AS [Product]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Product_Vendor" Association="Self.FK_Product_Vendor">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Vendor_Vendor" Association="Self.FK_Vendor_Vendor">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="Vendor1" EntitySet="Vendor" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
